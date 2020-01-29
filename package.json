@@ -1,0 +1,37 @@
+{
+  "name": "seed",
+  "version": "0.0.1",
+  "description": "Spring like framework for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "ts-node ./sample/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ecube-Labs/seed.git"
+  },
+  "author": "id.kim@ecubelabs.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ecube-Labs/seed/issues"
+  },
+  "homepage": "https://github.com/Ecube-Labs/seed#readme",
+  "devDependencies": {
+    "@types/jest": "^25.1.0",
+    "@types/lodash": "^4.14.149",
+    "@types/uuid": "^3.4.7",
+    "jest": "^25.1.0",
+    "mysql": "^2.18.1",
+    "ts-jest": "^25.0.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "reflect-metadata": "^0.1.13",
+    "typedi": "^0.8.0",
+    "typeorm": "^0.2.22",
+    "uuid": "^3.4.0"
+  }
+}
