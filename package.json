@@ -2,11 +2,14 @@
   "name": "seed",
   "version": "0.0.1",
   "description": "Spring like framework for Node.js",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "start": "ts-node ./sample/index.ts"
+    "start": "ts-node ./sample/index.ts",
+    "preversion": "npm build && git add -A dist && git add package.json",
+    "build": "tsc"
   },
+  "private": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Ecube-Labs/seed.git"
@@ -20,6 +23,7 @@
   "devDependencies": {
     "@types/jest": "^25.1.0",
     "@types/lodash": "^4.14.149",
+    "@types/node": "^13.5.2",
     "@types/uuid": "^3.4.7",
     "jest": "^25.1.0",
     "mysql": "^2.18.1",
