@@ -1,5 +1,5 @@
 {
-  "name": "seed",
+  "name": "@ecubelabs/seed",
   "version": "0.0.1",
   "description": "Spring like framework for Node.js",
   "main": "dist/index.js",
