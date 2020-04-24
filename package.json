@@ -9,7 +9,7 @@
     "version": "npm run build && git add -A dist && git add package.json",
     "postversion": "git push && git push --tags",
     "prepublishOnly": "rm -rf ./src && cp -r ./dist/* . && rm -rf ./dist",
-    "postpublish": "git reset --hard",
+    "postpublish": "git clean -fd && git reset --hard",
     "build": "tsc"
   },
   "private": false,
