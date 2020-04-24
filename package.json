@@ -2,7 +2,7 @@
   "name": "@ecubelabs/seed",
   "version": "0.0.5",
   "description": "Spring like framework for Node.js",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "jest",
     "start": "ts-node ./sample/index.ts",
