@@ -1,7 +1,7 @@
 import { Service } from "./service";
 
 export function Transactional() {
-  return function(target: Service, propertyKey: string, descriptor: PropertyDescriptor) {
+  return async function(target: Service, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
     descriptor.value = async function(this: Service, ...args: any[]) {
