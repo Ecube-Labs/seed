@@ -38,35 +38,40 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 function Transactional() {
     return function (target, propertyKey, descriptor) {
-        var originalMethod = descriptor.value;
-        descriptor.value = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            return __awaiter(this, void 0, void 0, function () {
-                var result;
-                var _this = this;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.transactionManager.transaction(function () { return __awaiter(_this, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4 /*yield*/, originalMethod.apply(this, args)];
-                                        case 1:
-                                            result = _a.sent();
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            }); })];
-                        case 1:
-                            _a.sent();
-                            return [2 /*return*/, result];
+        return __awaiter(this, void 0, void 0, function () {
+            var originalMethod;
+            return __generator(this, function (_a) {
+                originalMethod = descriptor.value;
+                descriptor.value = function () {
+                    var args = [];
+                    for (var _i = 0; _i < arguments.length; _i++) {
+                        args[_i] = arguments[_i];
                     }
-                });
+                    return __awaiter(this, void 0, void 0, function () {
+                        var result;
+                        var _this = this;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, this.transactionManager.transaction(function () { return __awaiter(_this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            switch (_a.label) {
+                                                case 0: return [4 /*yield*/, originalMethod.apply(this, args)];
+                                                case 1:
+                                                    result = _a.sent();
+                                                    return [2 /*return*/];
+                                            }
+                                        });
+                                    }); })];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/, result];
+                            }
+                        });
+                    });
+                };
+                return [2 /*return*/, descriptor];
             });
-        };
-        return descriptor;
+        });
     };
 }
 exports.Transactional = Transactional;
