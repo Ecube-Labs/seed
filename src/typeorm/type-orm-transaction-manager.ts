@@ -6,7 +6,7 @@ export class TypeOrmTransactionManager extends TransactionManager {
    * @param runInTransaction
    */
   async transaction(runInTransaction: () => Promise<void>): Promise<void> {
-    getManager().transaction(async entityManager => {
+    await getManager().transaction(async entityManager => {
       this.context.set(EntityManager, entityManager);
       await runInTransaction();
     });
