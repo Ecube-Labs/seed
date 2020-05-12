@@ -33,6 +33,22 @@ class Apple extends Aggregate<Apple> {
   headPhoneJackCount = 0;
 }
 
+abstract class Animal extends Aggregate<Animal> {
+  @Identifier()
+  private name: string;
+
+  protected getClasses(): Function[] {
+    return [Animal, Cat];
+  }
+
+  constructor(name: string) {
+    super();
+    this.name = name;
+  }
+}
+
+class Cat extends Animal {}
+
 describe("Test Aggregate", () => {
   describe("Test getId()", () => {
     test("The type of the aggregate's identifier should be number.", () => {
@@ -46,6 +62,12 @@ describe("Test Aggregate", () => {
 
       expect(team.getId()).toBe("sw");
     });
+
+    test("The type of the aggregate's identifier should be string.", () => {
+      const cat = new Cat("moongchi");
+
+      expect(cat.getId()).toBe("moongchi");
+    });
   });
 
   describe("Test toNullable()", () => {
@@ -55,7 +77,7 @@ describe("Test Aggregate", () => {
       expect(apple.toNullable()).toEqual({
         airPower: null,
         headPhoneJackCount: 0,
-        iPhone: "iPhone"
+        iPhone: "iPhone",
       });
     });
 
@@ -66,7 +88,7 @@ describe("Test Aggregate", () => {
       expect(apple.toNullable()).toEqual({
         airPower: "none",
         headPhoneJackCount: 0,
-        iPhone: "iPhone"
+        iPhone: "iPhone",
       });
     });
   });

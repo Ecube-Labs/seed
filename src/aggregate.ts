@@ -9,10 +9,9 @@ export abstract class Aggregate<T> {
    *
    */
   public getId(): number | string {
-    const identifierKey: string = Reflect.getMetadata(
-      `model:${this.constructor.name}:id`,
-      this.constructor.prototype
-    );
+    const identifierKey: string = flatMap(this.getClasses(), (clazz) => [
+      Reflect.getMetadata(`model:${clazz.name}:id`, clazz.prototype),
+    ])[0];
     // TODO: Can we do this without @ts-ignore?
     // @ts-ignore
     return this[identifierKey];
