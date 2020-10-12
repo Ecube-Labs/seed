@@ -1,6 +1,6 @@
 {
   "name": "@ecubelabs/seed",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Spring like framework for Node.js",
   "main": "index.js",
   "scripts": {
@@ -35,13 +35,13 @@
     "mysql": "^2.18.1",
     "ts-jest": "^25.5.1",
     "ts-node": "^8.6.2",
+    "typeorm": "^0.2.22",
     "typescript": "^3.7.5"
   },
   "dependencies": {
     "lodash": "^4.17.15",
     "reflect-metadata": "^0.1.13",
     "typedi": "^0.8.0",
-    "typeorm": "^0.2.22",
     "uuid": "^3.4.0"
   }
 }
