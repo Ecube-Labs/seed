@@ -15,7 +15,9 @@ var Aggregate = /** @class */ (function () {
      *
      */
     Aggregate.prototype.getId = function () {
-        var identifierKey = Reflect.getMetadata("model:" + this.constructor.name + ":id", this.constructor.prototype);
+        var identifierKey = lodash_1.flatMap(this.getClasses(), function (clazz) { return [
+            Reflect.getMetadata("model:" + clazz.name + ":id", clazz.prototype),
+        ]; })[0];
         // TODO: Can we do this without @ts-ignore?
         // @ts-ignore
         return this[identifierKey];

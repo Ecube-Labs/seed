@@ -71,6 +71,29 @@ var Apple = /** @class */ (function (_super) {
     ], Apple.prototype, "headPhoneJackCount", void 0);
     return Apple;
 }(aggregate_1.Aggregate));
+var Animal = /** @class */ (function (_super) {
+    __extends(Animal, _super);
+    function Animal(name) {
+        var _this = _super.call(this) || this;
+        _this.name = name;
+        return _this;
+    }
+    Animal.prototype.getClasses = function () {
+        return [Animal, Cat];
+    };
+    __decorate([
+        aggregate_1.Identifier(),
+        __metadata("design:type", String)
+    ], Animal.prototype, "name", void 0);
+    return Animal;
+}(aggregate_1.Aggregate));
+var Cat = /** @class */ (function (_super) {
+    __extends(Cat, _super);
+    function Cat() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return Cat;
+}(Animal));
 describe("Test Aggregate", function () {
     describe("Test getId()", function () {
         test("The type of the aggregate's identifier should be number.", function () {
@@ -81,6 +104,10 @@ describe("Test Aggregate", function () {
             var team = new Team("sw");
             expect(team.getId()).toBe("sw");
         });
+        test("The type of the aggregate's identifier should be string.", function () {
+            var cat = new Cat("moongchi");
+            expect(cat.getId()).toBe("moongchi");
+        });
     });
     describe("Test toNullable()", function () {
         test("When optional property decorated by @Property does not have value, it should be converted to null.", function () {
@@ -88,7 +115,7 @@ describe("Test Aggregate", function () {
             expect(apple.toNullable()).toEqual({
                 airPower: null,
                 headPhoneJackCount: 0,
-                iPhone: "iPhone"
+                iPhone: "iPhone",
             });
         });
         test("When optional property decorated by @Property does have value, it should be changed.", function () {
@@ -97,7 +124,7 @@ describe("Test Aggregate", function () {
             expect(apple.toNullable()).toEqual({
                 airPower: "none",
                 headPhoneJackCount: 0,
-                iPhone: "iPhone"
+                iPhone: "iPhone",
             });
         });
     });
