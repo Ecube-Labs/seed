@@ -1,13 +1,14 @@
-import { EntityManager } from "typeorm";
-import { Aggregate } from "../aggregate";
-import { Repository } from "../repository";
+import { EntityManager } from 'typeorm';
+import { Aggregate } from '../aggregate';
+import { Repository } from 'typeorm';
+import { Context } from '../context';
 export declare abstract class TypeOrmRepository<T extends Aggregate<T>> extends Repository<T> {
+    protected context: Context;
+    private _manager;
     /**
-     *
+     * @deprecated use `manager`
      */
     protected get entityManager(): EntityManager;
-    /**
-     * @param aggregates
-     */
-    save(aggregates: T[]): Promise<void>;
+    set manager(manager: EntityManager);
+    get manager(): EntityManager;
 }

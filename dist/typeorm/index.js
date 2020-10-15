@@ -5,3 +5,4 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./type-orm-repository"));
 __export(require("./type-orm-transaction-manager"));
+__export(require("./patch-typeorm-repository"));

@@ -14,9 +14,9 @@ var Context = /** @class */ (function () {
         this._dispose = function () {
             typedi_1.Container.reset(containerId);
         };
-        this._get = function (type) { return container.get(type); };
-        this._set = function (type, instance) { return container.set(type, instance); };
-        this._has = function (type) { return container.has(type); };
+        this.get = container.get.bind(container);
+        this.set = container.set.bind(container);
+        this.has = container.has.bind(container);
     }
     Context.of = function (txId) {
         return new Context(txId);
@@ -36,25 +36,6 @@ var Context = /** @class */ (function () {
      */
     Context.prototype.dispose = function () {
         this._dispose();
-    };
-    /**
-     * @param type
-     */
-    Context.prototype.get = function (type) {
-        return this._get(type);
-    };
-    /**
-     * @param type
-     * @param instance
-     */
-    Context.prototype.set = function (type, instance) {
-        this._set(type, instance);
-    };
-    /**
-     * @param type
-     */
-    Context.prototype.has = function (type) {
-        return this._has(type);
     };
     return Context;
 }());

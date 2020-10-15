@@ -1,4 +1,4 @@
-declare type ClassType<T> = new (...args: any[]) => T;
+import { ContainerInstance } from "typedi";
 export declare class Context {
     static of(txId: string): Context;
     /**
@@ -11,25 +11,11 @@ export declare class Context {
      */
     dispose(): void;
     private _dispose;
-    /**
-     * @param type
-     */
-    get<T>(type: ClassType<T>): T;
-    private _get;
-    /**
-     * @param type
-     * @param instance
-     */
-    set<T>(type: ClassType<T>, instance: T): void;
-    private _set;
-    /**
-     * @param type
-     */
-    has<T>(type: ClassType<T>): boolean;
-    private _has;
+    get: ContainerInstance['get'];
+    set: ContainerInstance['set'];
+    has: ContainerInstance['has'];
     /**
      * @param txId
      */
     private constructor();
 }
-export {};
