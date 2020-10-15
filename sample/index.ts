@@ -35,11 +35,7 @@ class Person extends Aggregate<Person> {
   }
 }
 
-class PersonRepository extends TypeOrmRepository<Person> {
-  async findAll(): Promise<Person[]> {
-    return this.entityManager.find(Person);
-  }
-}
+class PersonRepository extends TypeOrmRepository<Person> {}
 
 class PersonService extends Service {
   @Inject()
@@ -52,7 +48,7 @@ class PersonService extends Service {
   }
 
   async getAll(): Promise<Person[]> {
-    return this.personRepository.findAll();
+    return this.personRepository.find();
   }
 }
 
