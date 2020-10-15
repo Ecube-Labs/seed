@@ -1,7 +1,5 @@
 import * as uuid from "uuid/v4";
-import { Container } from "typedi";
-
-type ClassType<T> = new (...args: any[]) => T;
+import { Container, ContainerInstance } from "typedi";
 
 export class Context {
   static of(txId: string): Context {
@@ -26,33 +24,11 @@ export class Context {
 
   private _dispose: () => void;
 
-  /**
-   * @param type
-   */
-  get<T>(type: ClassType<T>): T {
-    return this._get(type);
-  }
+  get: ContainerInstance['get'];
 
-  private _get: <T>(type: ClassType<T>) => T;
+  set: ContainerInstance['set'];
 
-  /**
-   * @param type
-   * @param instance
-   */
-  set<T>(type: ClassType<T>, instance: T) {
-    this._set(type, instance);
-  }
-
-  private _set: <T>(type: ClassType<T>, instance: T) => void;
-
-  /**
-   * @param type
-   */
-  has<T>(type: ClassType<T>): boolean {
-    return this._has(type);
-  }
-
-  private _has: <T>(type: ClassType<T>) => boolean;
+  has: ContainerInstance['has'];
 
   /**
    * @param txId
@@ -68,10 +44,10 @@ export class Context {
       Container.reset(containerId);
     };
 
-    this._get = type => container.get(type);
+    this.get = container.get.bind(container);
 
-    this._set = (type, instance) => container.set(type, instance);
+    this.set = container.set.bind(container);
 
-    this._has = type => container.has(type);
+    this.has = container.has.bind(container);
   }
 }
