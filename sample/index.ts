@@ -35,7 +35,9 @@ class Person extends Aggregate<Person> {
   }
 }
 
-class PersonRepository extends TypeOrmRepository<Person> {
+class PersonRepository extends TypeOrmRepository<Person, number> {
+  entityClass = Person;
+
   async findAll(): Promise<Person[]> {
     return this.entityManager.find(Person);
   }
@@ -45,7 +47,7 @@ class PersonService extends Service {
   @Inject()
   private personRepository!: PersonRepository;
 
-  @Transactional()
+  // @Transactional()
   async create() {
     const person = new Person({ name: "charlie", age: 33 });
     await this.personRepository.save([person]);
@@ -53,6 +55,10 @@ class PersonService extends Service {
 
   async getAll(): Promise<Person[]> {
     return this.personRepository.findAll();
+  }
+
+  async get(id: number): Promise<Person> {
+    return this.personRepository.findOneOrFail(id);
   }
 }
 
@@ -91,5 +97,9 @@ async function sleep(ms: number) {
 
   console.log(await personService.getAll());
   await sleep(1000);
+
   await personService.create();
+  await sleep(1000);
+
+  console.log(await personService.get(1));
 })();
