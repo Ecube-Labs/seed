@@ -1,8 +1,13 @@
-import { EntityManager, getManager } from "typeorm";
+import { EntityManager, getManager, ObjectType } from "typeorm";
 import { Aggregate } from "../aggregate";
 import { Repository } from "../repository";
 
-export abstract class TypeOrmRepository<T extends Aggregate<T>> extends Repository<T> {
+export abstract class TypeOrmRepository<
+  T extends Aggregate<T>,
+  ID
+> extends Repository<T, ID> {
+  protected abstract entityClass: ObjectType<T>;
+
   /**
    *
    */
@@ -18,5 +23,19 @@ export abstract class TypeOrmRepository<T extends Aggregate<T>> extends Reposito
    */
   async save(aggregates: T[]) {
     await this.entityManager.save(aggregates);
+  }
+
+  /**
+   * @param id
+   */
+  async findOneOrFail(id: ID): Promise<T> {
+    return this.entityManager.findOneOrFail(this.entityClass, id);
+  }
+
+  /**
+   * @param ids
+   */
+  async findByIds(ids: ID[]): Promise<T[]> {
+    return this.entityManager.findByIds(this.entityClass, ids);
   }
 }
