@@ -2,22 +2,22 @@ import { Inject } from "typedi";
 import { Aggregate } from "./aggregate";
 import { Context } from "./context";
 
-export abstract class Repository<T extends Aggregate<T>, ID> {
+export abstract class Repository<T extends Aggregate<T>, ID, C extends Context = Context> {
   @Inject()
-  protected context!: Context;
+  protected context!: C;
 
   /**
    * @param aggregates
    */
-  abstract async save(aggregates: T[]): Promise<void>;
+  abstract save(aggregates: T[]): Promise<void>;
 
   /**
    * @param id
    */
-  abstract async findOneOrFail(id: ID): Promise<T>;
+  abstract findOneOrFail(id: ID): Promise<T>;
 
   /**
    * @param ids
    */
-  abstract async findByIds(ids: ID[]): Promise<T[]>;
+  abstract findByIds(ids: ID[]): Promise<T[]>;
 }

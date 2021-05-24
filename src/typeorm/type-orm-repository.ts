@@ -1,11 +1,13 @@
 import { EntityManager, getManager, ObjectType } from "typeorm";
 import { Aggregate } from "../aggregate";
+import { Context } from "../context";
 import { Repository } from "../repository";
 
 export abstract class TypeOrmRepository<
   T extends Aggregate<T>,
-  ID
-> extends Repository<T, ID> {
+  ID,
+  C extends Context
+> extends Repository<T, ID, C> {
   protected abstract entityClass: ObjectType<T>;
 
   /**

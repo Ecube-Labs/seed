@@ -57,7 +57,7 @@ export class Context {
   /**
    * @param txId
    */
-  private constructor(txId: string) {
+  protected constructor(txId: string) {
     const containerId = uuid();
     const container = Container.of(containerId);
     container.set(Context, this);
