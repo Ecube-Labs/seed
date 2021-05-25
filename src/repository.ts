@@ -2,9 +2,9 @@ import { Inject } from "typedi";
 import { Aggregate } from "./aggregate";
 import { Context } from "./context";
 
-export abstract class Repository<T extends Aggregate<T>, ID, C extends Context = Context> {
+export abstract class Repository<T extends Aggregate<T>, ID> {
   @Inject()
-  protected context!: C;
+  protected context!: Context;
 
   /**
    * @param aggregates
