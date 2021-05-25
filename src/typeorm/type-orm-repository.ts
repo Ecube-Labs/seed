@@ -5,9 +5,8 @@ import { Repository } from "../repository";
 
 export abstract class TypeOrmRepository<
   T extends Aggregate<T>,
-  ID,
-  C extends Context
-> extends Repository<T, ID, C> {
+  ID
+> extends Repository<T, ID> {
   protected abstract entityClass: ObjectType<T>;
 
   /**
