@@ -2,11 +2,9 @@ import { EntityManager, getManager, ObjectType } from "typeorm";
 import { Aggregate } from "../aggregate";
 import { Repository } from "../repository";
 
-export abstract class TypeOrmRepository<
-  T extends Aggregate<T>,
-  ID
-> extends Repository<T, ID> {
+export abstract class TypeOrmRepository<T extends Aggregate<T>, ID> extends Repository<T, ID> {
   protected abstract entityClass: ObjectType<T>;
+  protected abstract connectionName?: string;
 
   /**
    *
@@ -15,7 +13,7 @@ export abstract class TypeOrmRepository<
     if (this.context.has(EntityManager)) {
       return this.context.get(EntityManager);
     }
-    return getManager();
+    return getManager(this.connectionName);
   }
 
   /**
