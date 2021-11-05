@@ -4,7 +4,7 @@ import { Repository } from "../repository";
 
 export abstract class TypeOrmRepository<T extends Aggregate<T>, ID> extends Repository<T, ID> {
   protected abstract entityClass: ObjectType<T>;
-  protected abstract connectionName?: string;
+  protected connectionName?: string;
 
   /**
    *
