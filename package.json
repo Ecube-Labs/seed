@@ -1,6 +1,6 @@
 {
   "name": "@ecubelabs/seed",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Spring like framework for Node.js",
   "main": "index.js",
   "scripts": {
