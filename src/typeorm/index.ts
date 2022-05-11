@@ -1,2 +1,3 @@
-export * from "./type-orm-repository";
-export * from './type-orm-transaction-manager'
+export { dataSourceMap } from './tokens'
+export { TypeOrmRepository } from "./type-orm-repository"
+export { TypeOrmTransactionManager } from './type-orm-transaction-manager'

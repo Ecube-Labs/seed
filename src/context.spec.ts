@@ -1,6 +1,7 @@
-import { Inject } from "typedi";
+import { Service, Inject } from "typedi";
 import { Context } from "./context";
 
+@Service()
 class User {
   @Inject()
   context!: Context;

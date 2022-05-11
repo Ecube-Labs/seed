@@ -2,18 +2,18 @@ import "reflect-metadata";
 import {
   Entity,
   Column,
-  createConnection,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  DataSource
 } from "typeorm";
-import { Container, Inject } from "typedi";
+import { Container, Service, Inject, ServiceOptions } from "typedi";
 import {
   Context,
   Aggregate,
-  Service,
+  Service as ApplicationService,
   Transactional,
   TransactionManager
 } from "../src";
-import { TypeOrmRepository, TypeOrmTransactionManager } from "../src/typeorm";
+import { TypeOrmRepository, TypeOrmTransactionManager, dataSourceMap } from "../src/typeorm";
 
 @Entity()
 class Person extends Aggregate<Person> {
@@ -35,6 +35,7 @@ class Person extends Aggregate<Person> {
   }
 }
 
+@Service()
 class PersonRepository extends TypeOrmRepository<Person, number> {
   entityClass = Person;
 
@@ -43,11 +44,12 @@ class PersonRepository extends TypeOrmRepository<Person, number> {
   }
 }
 
-class PersonService extends Service {
+@Service()
+class PersonService extends ApplicationService {
   @Inject()
   private personRepository!: PersonRepository;
 
-  // @Transactional()
+  @Transactional()
   async create() {
     const person = new Person({ name: "charlie", age: 33 });
     await this.personRepository.save([person]);
@@ -62,7 +64,7 @@ class PersonService extends Service {
   }
 }
 
-async function sleep(ms: number) {
+async function sleep(ms: number): Promise<void> {
   return new Promise(resolve =>
     setTimeout(() => {
       resolve();
@@ -71,7 +73,7 @@ async function sleep(ms: number) {
 }
 
 (async () => {
-  await createConnection({
+  const dataSource = new DataSource({
     type: "mysql",
     host: "localhost",
     port: 3306,
@@ -84,12 +86,18 @@ async function sleep(ms: number) {
     bigNumberStrings: false,
     entities: [Person]
   });
+  await dataSource.initialize();
 
   // DO THIS WHEN YOUR APP STARTS
   Container.set({
-    id: TransactionManager,
-    type: TypeOrmTransactionManager
+    id: dataSourceMap,
+    value: { default: dataSource },
+    global: true,
   });
+  Container.set({
+    id: TransactionManager,
+    type: TypeOrmTransactionManager,
+  } as ServiceOptions<TypeOrmTransactionManager>);
 
   const context = Context.of("TXID");
 

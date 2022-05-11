@@ -1,4 +1,4 @@
-import * as uuid from "uuid/v4";
+import { v4 as uuid } from 'uuid';
 import { Container, Token } from "typedi";
 
 type ClassType<T> = new (...args: any[]) => T;
@@ -60,6 +60,7 @@ export class Context {
   protected constructor(txId: string) {
     const containerId = uuid();
     const container = Container.of(containerId);
+    // @ts-expect-error 생성자로 Context 를 생성하지 못하게 protected 로 막아 두어서 타입 오류 발생.
     container.set(Context, this);
 
     this._txId = txId;
