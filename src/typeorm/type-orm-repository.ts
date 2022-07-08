@@ -1,4 +1,4 @@
-import { EntityManager, ObjectType } from "typeorm"
+import { EntityManager, ObjectType, EntityNotFoundError } from "typeorm"
 import { Aggregate } from "../aggregate"
 import { Repository } from "../repository"
 import { dataSourceMap } from './tokens'
@@ -25,13 +25,19 @@ export abstract class TypeOrmRepository<T extends Aggregate<T>, ID> extends Repo
   }
 
   /**
+   * @deprecated
    * @param id
    */
   async findOneOrFail(id: ID): Promise<T> {
-    return this.entityManager.findOneByOrFail(this.entityClass, id)
+    const [entity] = await this.entityManager.findByIds(this.entityClass, [id]);
+    if (!entity) {
+      throw new EntityNotFoundError(this.entityClass, id);
+    }
+    return entity;
   }
 
   /**
+   * @deprecated
    * @param ids
    */
   async findByIds(ids: ID[]): Promise<T[]> {

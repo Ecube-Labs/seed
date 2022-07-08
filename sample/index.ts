@@ -110,4 +110,11 @@ async function sleep(ms: number): Promise<void> {
   await sleep(1000);
 
   console.log(await personService.get(1));
+  console.log(await Promise.all([
+    personService.get(3),
+    personService.get(7)
+  ]));
+
+  const personRepository = context.get(PersonRepository);
+  console.log(await personRepository.findByIds([2, 3, 5]));
 })();
