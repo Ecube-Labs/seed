@@ -3,7 +3,8 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  DataSource
+  DataSource,
+  OneToMany, ManyToOne
 } from "typeorm";
 import { Container, Service, Inject, ServiceOptions } from "typedi";
 import {
@@ -17,7 +18,7 @@ import { TypeOrmRepository, TypeOrmTransactionManager, dataSourceMap } from "../
 
 @Entity()
 class Person extends Aggregate<Person> {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ name: 'idx' })
   id!: number;
 
   @Column()
@@ -26,11 +27,33 @@ class Person extends Aggregate<Person> {
   @Column()
   age!: number;
 
+  @OneToMany(() => Address, (address) => address.person, { eager: true, cascade: true })
+  addresses!: Address[];
+
   constructor(args?: { name: string; age: number }) {
     super();
     if (args) {
       this.name = args.name;
       this.age = args.age;
+      this.addresses = [new Address({ zipCode: '12345' })]
+    }
+  }
+}
+
+@Entity()
+class Address {
+  @ManyToOne(() => Person, (person) => person.addresses)
+  person?: never;
+
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column()
+  zipCode!: string;
+
+  constructor(args?: { zipCode: string; }) {
+    if (args) {
+      this.zipCode = args.zipCode;
     }
   }
 }
@@ -84,7 +107,7 @@ async function sleep(ms: number): Promise<void> {
     logging: true,
     supportBigNumbers: true,
     bigNumberStrings: false,
-    entities: [Person]
+    entities: [Person, Address]
   });
   await dataSource.initialize();
 
@@ -110,11 +133,11 @@ async function sleep(ms: number): Promise<void> {
   await sleep(1000);
 
   console.log(await personService.get(1));
-  console.log(await Promise.all([
-    personService.get(3),
-    personService.get(7)
-  ]));
+  // console.log(await Promise.all([
+  //   personService.get(3),
+  //   personService.get(7)
+  // ]));
 
   const personRepository = context.get(PersonRepository);
-  console.log(await personRepository.findByIds([2, 3, 5]));
+  console.log(await personRepository.findByIds([1, 2]));
 })();
