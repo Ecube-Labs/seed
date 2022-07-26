@@ -2,22 +2,23 @@ import "reflect-metadata";
 import {
   Entity,
   Column,
-  createConnection,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  DataSource,
+  OneToMany, ManyToOne
 } from "typeorm";
-import { Container, Inject } from "typedi";
+import { Container, Service, Inject, ServiceOptions } from "typedi";
 import {
   Context,
   Aggregate,
-  Service,
+  Service as ApplicationService,
   Transactional,
   TransactionManager
 } from "../src";
-import { TypeOrmRepository, TypeOrmTransactionManager } from "../src/typeorm";
+import { TypeOrmRepository, TypeOrmTransactionManager, dataSourceMap } from "../src/typeorm";
 
 @Entity()
 class Person extends Aggregate<Person> {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ name: 'idx' })
   id!: number;
 
   @Column()
@@ -26,15 +27,38 @@ class Person extends Aggregate<Person> {
   @Column()
   age!: number;
 
+  @OneToMany(() => Address, (address) => address.person, { eager: true, cascade: true })
+  addresses!: Address[];
+
   constructor(args?: { name: string; age: number }) {
     super();
     if (args) {
       this.name = args.name;
       this.age = args.age;
+      this.addresses = [new Address({ zipCode: '12345' })]
     }
   }
 }
 
+@Entity()
+class Address {
+  @ManyToOne(() => Person, (person) => person.addresses)
+  person?: never;
+
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column()
+  zipCode!: string;
+
+  constructor(args?: { zipCode: string; }) {
+    if (args) {
+      this.zipCode = args.zipCode;
+    }
+  }
+}
+
+@Service()
 class PersonRepository extends TypeOrmRepository<Person, number> {
   entityClass = Person;
 
@@ -43,11 +67,12 @@ class PersonRepository extends TypeOrmRepository<Person, number> {
   }
 }
 
-class PersonService extends Service {
+@Service()
+class PersonService extends ApplicationService {
   @Inject()
   private personRepository!: PersonRepository;
 
-  // @Transactional()
+  @Transactional()
   async create() {
     const person = new Person({ name: "charlie", age: 33 });
     await this.personRepository.save([person]);
@@ -62,7 +87,7 @@ class PersonService extends Service {
   }
 }
 
-async function sleep(ms: number) {
+async function sleep(ms: number): Promise<void> {
   return new Promise(resolve =>
     setTimeout(() => {
       resolve();
@@ -71,7 +96,7 @@ async function sleep(ms: number) {
 }
 
 (async () => {
-  await createConnection({
+  const dataSource = new DataSource({
     type: "mysql",
     host: "localhost",
     port: 3306,
@@ -82,14 +107,20 @@ async function sleep(ms: number) {
     logging: true,
     supportBigNumbers: true,
     bigNumberStrings: false,
-    entities: [Person]
+    entities: [Person, Address]
   });
+  await dataSource.initialize();
 
   // DO THIS WHEN YOUR APP STARTS
   Container.set({
-    id: TransactionManager,
-    type: TypeOrmTransactionManager
+    id: dataSourceMap,
+    value: { default: dataSource },
+    global: true,
   });
+  Container.set({
+    id: TransactionManager,
+    type: TypeOrmTransactionManager,
+  } as ServiceOptions<TypeOrmTransactionManager>);
 
   const context = Context.of("TXID");
 
@@ -102,4 +133,11 @@ async function sleep(ms: number) {
   await sleep(1000);
 
   console.log(await personService.get(1));
+  // console.log(await Promise.all([
+  //   personService.get(3),
+  //   personService.get(7)
+  // ]));
+
+  const personRepository = context.get(PersonRepository);
+  console.log(await personRepository.findByIds([1, 2]));
 })();
