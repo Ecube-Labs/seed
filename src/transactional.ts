@@ -1,6 +1,6 @@
 import { Service } from "./service";
 
-export function Transactional(dataSource?: string) {
+export function Transactional(options?: { dataSource?: string }) {
   return function(target: Service, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
@@ -9,7 +9,7 @@ export function Transactional(dataSource?: string) {
 
       await this.transactionManager.transaction(async () => {
         result = await originalMethod.apply(this, args);
-      }, dataSource);
+      }, options?.dataSource);
 
       return result;
     };
