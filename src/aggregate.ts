@@ -1,9 +1,18 @@
 import { flatMap } from "lodash";
 
 type Nullable<T> = {
-  [P in keyof T]: undefined extends T[P] ? T[P] | null : T[P];
+    [P in keyof T]-?: T[P] extends (infer U)[]
+        ? Nullable<U>[]
+        : T[P] extends Date
+        ? undefined extends T[P]
+            ? T[P] | null
+            : T[P]
+        : T[P] extends object
+        ? Nullable<T[P]>
+        : undefined extends T[P]
+        ? T[P] | null
+        : T[P];
 };
-
 export abstract class Aggregate<T> {
   /**
    *
