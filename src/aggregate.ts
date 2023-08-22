@@ -33,9 +33,6 @@ export abstract class Aggregate<T> {
     return [this.constructor];
   }
 
-  /**
-   * FIXME: It seems that it converts Date to string.
-   */
   public toNullable(): Nullable<T> {
     const nullable = {};
     const propertyKeys = new Set(
