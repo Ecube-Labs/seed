@@ -35,10 +35,8 @@ export abstract class TypeOrmRepository<
   async findOneOrFail(
     id: ID,
     options?: {
-      lock: {
-        mode: "pessimistic_read" | "pessimistic_write";
-        withDeleted?: boolean;
-      };
+      lock?: { mode: "pessimistic_read" | "pessimistic_write" };
+      withDeleted?: boolean;
     }
   ): Promise<T> {
     const [entity] = await this.findByIds([id], options);
@@ -55,10 +53,8 @@ export abstract class TypeOrmRepository<
   async findByIds(
     ids: ID[],
     options?: {
-      lock: {
-        mode: "pessimistic_read" | "pessimistic_write";
-        withDeleted?: boolean;
-      };
+      lock?: { mode: "pessimistic_read" | "pessimistic_write" };
+      withDeleted?: boolean;
     }
   ): Promise<T[]> {
     const primaryColumns = this.entityManager.connection
