@@ -9,15 +9,13 @@ export function PreAuthorize<T>(authorizationFn: (param: T) => boolean) {
   ) {
     const originalMethod = descriptor.value;
 
-    descriptor.value = function (...args: any[]) {
-      const authValue = target.context.get(authValueToken) as T;
+    descriptor.value = function (this: Service, ...args: any[]) {
+      const authValue = this.context.get(authValueToken) as T;
       if (authValue) {
         if (authorizationFn(authValue)) {
           return originalMethod.apply(this, args);
         } else {
-          throw new Error(
-            "No permissions to perform this action."
-          );
+          throw new Error("No permissions to perform this action.");
         }
       } else {
         throw new Error("Auth value is not set.");
