@@ -1,0 +1,27 @@
+import { Service } from "./service";
+import { authValueToken } from "./tokens";
+
+export function PreAuthorize<T>(authorizationFn: (param: T) => boolean) {
+  return function (
+    target: Service,
+    propertyKey: string,
+    descriptor: PropertyDescriptor
+  ) {
+    const originalMethod = descriptor.value;
+
+    descriptor.value = function (this: Service, ...args: any[]) {
+      const authValue = this.context.get(authValueToken) as T;
+      if (authValue) {
+        if (authorizationFn(authValue)) {
+          return originalMethod.apply(this, args);
+        } else {
+          throw new Error("No permissions to perform this action.");
+        }
+      } else {
+        throw new Error("Auth value is not set.");
+      }
+    };
+
+    return descriptor;
+  };
+}
