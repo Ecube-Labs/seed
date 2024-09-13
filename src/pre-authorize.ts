@@ -1,6 +1,7 @@
 import { Service } from "./service";
 import { authValueToken } from "./tokens";
 
+
 export function PreAuthorize<T>(authorizationFn: (param: T) => boolean) {
   return function (
     target: Service,
@@ -15,7 +16,10 @@ export function PreAuthorize<T>(authorizationFn: (param: T) => boolean) {
         if (authorizationFn(authValue)) {
           return originalMethod.apply(this, args);
         } else {
-          throw new Error("No permissions to perform this action.");
+          const error = new Error("No permissions to perform this action.");
+          // @ts-expect-error
+          error.code = 'ERR_ACCESS_DENIED';
+          throw error;
         }
       } else {
         throw new Error("Auth value is not set.");
