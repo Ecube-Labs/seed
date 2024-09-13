@@ -1,7 +1,6 @@
 import { Service } from "./service";
 import { authValueToken } from "./tokens";
 
-
 export function PreAuthorize<T>(authorizationFn: (param: T) => boolean) {
   return function (
     target: Service,
