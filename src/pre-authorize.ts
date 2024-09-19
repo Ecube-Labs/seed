@@ -1,4 +1,4 @@
-import { PreAuthorizationFailedError, AuthTokenNotSetError } from "./error";
+import { PreAuthorizationFailed, NoAuthTokenFound } from "./error";
 import { Service } from "./service";
 import { authValueToken } from "./tokens";
 
@@ -16,12 +16,12 @@ export function PreAuthorize<T>(authorizationFn: (param: T) => boolean) {
         if (authorizationFn(authValue)) {
           return originalMethod.apply(this, args);
         } else {
-          throw new PreAuthorizationFailedError(
+          throw new PreAuthorizationFailed(
             "No permissions to perform this action."
           );
         }
       } else {
-        throw new AuthTokenNotSetError("Auth value is not set.");
+        throw new NoAuthTokenFound("Auth value is not set.");
       }
     };
 

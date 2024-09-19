@@ -1,4 +1,4 @@
-abstract class SeedError extends Error {
+export abstract class SeedError extends Error {
   constructor(
     message: string,
     public readonly code: string,
@@ -13,14 +13,14 @@ abstract class SeedError extends Error {
   }
 }
 
-export class PreAuthorizationFailedError extends SeedError {
+export class PreAuthorizationFailed extends SeedError {
   constructor(message: string, context?: any) {
-    super(message, "PRE_AUTHORIZATION_FAILED_ERROR", context);
+    super(message, "PRE_AUTHORIZATION_FAILED", context);
   }
 }
 
-export class AuthTokenNotSetError extends SeedError {
+export class NoAuthTokenFound extends SeedError {
   constructor(message: string, context?: any) {
-    super(message, "AUTH_TOKEN_NOT_SET_ERROR", context);
+    super(message, "NO_AUTH_TOKEN_FOUND", context);
   }
 }
