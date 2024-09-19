@@ -21,7 +21,7 @@ export function PreAuthorize<T>(authorizationFn: (param: T) => boolean) {
           );
         }
       } else {
-        throw new NoAuthTokenFound("Auth value is not set.");
+        throw new NoAuthTokenFound("Authorization token not found.");
       }
     };
 
