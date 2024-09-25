@@ -1,5 +1,6 @@
 export abstract class SeedError extends Error {
   static code = "SEED_ERROR";
+  private readonly isSeedError = true;
 
   constructor(
     message: string,
@@ -13,22 +14,26 @@ export abstract class SeedError extends Error {
       Error.captureStackTrace(this, this.constructor);
     }
   }
-
-  static [Symbol.hasInstance](instance: any) {
-    if (this === SeedError) {
-      return instance instanceof Error && "code" in instance;
-    } else {
-      return (
-        instance instanceof Error &&
-        "code" in instance &&
-        (instance as any).code === this.code
-      );
-    }
-  }
 }
+
+Object.defineProperty(SeedError, Symbol.hasInstance, {
+  value: function (instance: any) {
+    return (
+      instance &&
+      typeof instance === "object" &&
+      "isSeedError" in instance &&
+      "code" in instance &&
+      (instance as any).code === this.code
+    );
+  },
+  writable: false,
+  configurable: true,
+  enumerable: false,
+});
 
 export class PreAuthorizationFailed extends SeedError {
   static code = "PRE_AUTHORIZATION_FAILED";
+
   constructor(message: string, context?: any) {
     super(message, PreAuthorizationFailed.code, context);
   }
@@ -36,6 +41,7 @@ export class PreAuthorizationFailed extends SeedError {
 
 export class NoAuthTokenFound extends SeedError {
   static code = "NO_AUTH_TOKEN_FOUND";
+
   constructor(message: string, context?: any) {
     super(message, NoAuthTokenFound.code, context);
   }
